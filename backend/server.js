@@ -1,26 +1,30 @@
-var express = require('express');
-var cors = require('cors');
-var bodyParser = require('body-parser')
-var app = express();
+var express    = require('express');        // Utilizaremos express, aqui lo mandamos llamar
 
-var router = express.Router(); 
-//NO ME GUSTA NADA CORS - PROBAR CON ROUTER EXPRESS 
-app.use(cors());
+var app        = express();                 // definimos la app usando express
+var bodyParser = require('body-parser'); //
+
+var mongoose = require('mongoose'); // Utilizamos la librería de mongoose
+
+mongoose.set('useUnifiedTopology', true);
+//Creamos la conexión con mongo
+mongoose.connect('mongodb://localhost:27017/dbTest1', {useNewUrlParser: true});
+
+// configuramos la app para que use bodyParser(), esto nos dejara usar la informacion de los POST
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-router.get('/small, smaller');
+var port = process.env.PORT || 3000;        // seteamos el puerto
 
-var posts = [
-    {message: 'hello'},
-    {message: 'bb'}
-]
+var router = express.Router();   //Creamos el router de express
 
-app.get('/posts', (req,res) => {
-    res.send(posts);
-})
+// Seteamos la ruta principal
+router.get('/', function(req, res) {
+    res.json({ message: 'Hooolaa :)'});
+});
 
-app.post('/register', (req,res) => {
-    console.log(req.body);
-})
+// Le decimos a la aplicación que utilize las rutas que agregamos
+app.use('/', router);
 
-app.listen(3000);
+// Iniciamos el servidor
+app.listen(port);
+console.log('Aplicación creada en el puerto: ' + port);

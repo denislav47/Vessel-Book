@@ -13,8 +13,8 @@ import { MessagesComponent } from './messages/messages.component'
 import {  MatCardModule } from '@angular/material/card'
 import {  MatButtonModule } from '@angular/material/button'
 import {  MatToolbarModule } from '@angular/material/toolbar'
-import { MatInputModule } from '@angular/material/input'
-import { RegisterComponent } from './register/register.component';
+import {  MatInputModule } from '@angular/material/input'
+import {  RegisterComponent } from './register/register.component';
 
 
 @NgModule({
