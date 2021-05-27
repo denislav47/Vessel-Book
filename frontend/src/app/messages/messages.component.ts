@@ -14,6 +14,6 @@ export class MessagesComponent {
 
 
   ngOnInit(){
-    this.apiService.getMessages();
+    // console.log(this.apiService.getMessages());
   }
 }

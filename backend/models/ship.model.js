@@ -27,4 +27,4 @@ var shipSchema = new mongoose.Schema({
 
 var shipModel = mongoose.model('Ship', shipSchema);
 
-module.export = shipModel;
+module.exports = shipModel;

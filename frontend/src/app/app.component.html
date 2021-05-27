@@ -1,6 +1,35 @@
-<mat-toolbar>
+<html>
+    <head></head>
+    <body>
+
+        <div class="shipCard" *ngFor="let ship of shipList">
+            <p>{{ship.name}}</p>
+            <p>{{ship.IMO}}</p>
+            <p>{{ship.owner}}</p>
+            <img src="../assets/images/lng-shi.jpg" alt="" width="200px">
+        </div>
+
+
+    </body>
+    <footer></footer>
+    
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <mat-toolbar>
     PS Social
     <span style="flex: 1 1 auto"></span>
     <button mat-button routerLink="/register">Register</button>
 </mat-toolbar>
-<router-outlet></router-outlet>
+<router-outlet></router-outlet> -->

@@ -1,5 +1,6 @@
 var express    = require('express');
 var router = express.Router();
+var cors    = require('cors');
 
 
 var port = process.env.PORT || 3000; 
@@ -10,7 +11,7 @@ var shipRouter = require('./routes/ship.router.js')
 
 var jsonData = {objeto: "cosa cara", tipo: "mangau"}
 
-
+app.use(cors({ origin: 'http://localhost:4200' , credentials : true}));
 
 app.use('/ship', shipRouter);
 

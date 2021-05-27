@@ -9,7 +9,18 @@ import { ApiService } from '../services/api.service'
 })
 export class AppComponent {
   title = 'frontendосбб';
+
+  shipList:any = [];
+
+  constructor (public apiService : ApiService) {}
   
   ngOnInit(){
+    
+    this.apiService.getUsers().subscribe((res: any) => {
+      this.shipList = res;
+      
+      console.log(this.shipList[0].name);
+      
+    })
   }
 }
