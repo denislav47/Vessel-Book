@@ -1,17 +1,40 @@
 <html>
-    <head></head>
     <body>
-
-        <div class="shipCard" *ngFor="let ship of shipList">
-            <p>{{ship.name}}</p>
-            <p>{{ship.IMO}}</p>
-            <p>{{ship.owner}}</p>
-            <img src="../assets/images/lng-shi.jpg" alt="" width="200px">
+        <div id="container">
+            <div id="header">
+                <h1>Vessel Book</h1>
+                <button id="addBtn" (click)="click()">Add new ship</button>
+                <input type="search" id="inSearch" (keypress)="search()" placeholder="Search...">
+                <button id="search">Search</button>
+            </div>
+            
+            <div id="mainContainer">
+                
+                <div class="shipCard" *ngFor="let ship of shipList">
+                    <button id="editBtn" (click)="click()">Edit</button>
+                    <button id="deleteBtn" (click)="click()">Delete</button>
+                    <p>{{ship.name}}</p>
+                    <p>{{ship.IMO}}</p>
+                    <p>{{ship.owner}}</p>
+                    <div id="imageBox" *ngFor="let image of ship.images">
+                        <img [src]="image" alt="image">
+                    </div>  
+                    
+                </div>
+            </div>
+            
+            <div id="popup">
+                <input id="inIMO" type="text" value="IMO">
+                <input id="inName" type="text" value="name">
+                <input id="inType" type="text" value="type">
+                <input id="inOwner" type="text" value="owner">
+                <input id="inContact" type="text" value="contact">
+                <button id="saveBtn" (click)="save()">Save</button>
+            </div>
         </div>
 
 
     </body>
-    <footer></footer>
     
 </html>
 

@@ -1,0 +1,35 @@
+#header {
+    width: 100%;
+    height: 100px;
+    background-color: gray;
+}
+
+h1 {
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#mainContainer{
+    width: max-content;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 10px;
+    grid-auto-rows: minmax(100px, auto);
+    margin-left: auto;
+    margin-right: auto;
+    width: 80%;
+}
+
+.shipCard {
+    border: 1px solid black;
+}
+
+#imageBox img {
+    width: 200px;
+    height: 150px;
+}
+
+#popup{
+    display: none;
+}
