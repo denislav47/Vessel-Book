@@ -19,7 +19,11 @@ export class ApiService {
     constructor ( private http: HttpClient) {}
 
 
-    getUsers(): any{
+    getShips(): any{
         return this.http.get(this.url + '/ship');
-      }
+    }
+
+    createShip(): any {
+      
+    }
 }
