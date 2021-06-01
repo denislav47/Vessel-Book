@@ -12,7 +12,7 @@
                 
                 <div class="shipCard" *ngFor="let ship of shipListDisplay ; let i = index">
                     <button id="editBtn" (click)="edit(i)" *ngIf="ship.edit != true">Edit</button>
-                    <button id="deleteBtn" (click)="delete()" *ngIf="ship.edit != true">Delete</button>
+                    <button id="deleteBtn" (click)="delete(i)" *ngIf="ship.edit != true">Delete</button>
 
                     <button id="saveEdidBtn" (click)="save(i)" *ngIf="ship.edit == true">Save</button>
                     <button id="cancelBtn" (click)="cancelEdit(i)" *ngIf="ship.edit == true">Cancel</button>
@@ -48,7 +48,7 @@
                 <input id="newOwner" type="text" placeholder="Owner">
                 <input id="newContact" type="text" placeholder="Contact"> 
                 <input id="newImageUp"  type="file">
-                <!-- <button id="saveBtn" (click)="save()">Save</button>-->
+                <button id="saveBtn" (click)="saveNew()">Save</button>
                 <button id="closeBtn" (click)="close()">Close</button>
             </div>
         </div>

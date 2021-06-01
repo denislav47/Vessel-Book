@@ -15,6 +15,7 @@ var shipModel = require('../models/ship.model');
 var jsonParser = bodyParser.json()
 
 router.get('/', function(req,res){
+    console.log('hola bb')
     shipModel.find( function(err, doc){
         if (err) {
             next(err);
@@ -37,6 +38,7 @@ router.get('/:id', function(req,res,next){
 })
 
 router.post('/', jsonParser , function(req,res,next){    
+    console.log('hola bb POST')
     let ship = req.body;
     console.log(ship);
     shipModel.create(ship,function(err, data){
@@ -64,10 +66,12 @@ router.put('/:id', function(req,res){
 
 router.delete('/:id', function(req,res){
     let shipId = req.params.id;
-    shipModel.findOneAndDelete(shipId, function(err, deletedData){
+    console.log(req.params)
+    shipModel.findOneAndDelete({_id:shipId}, function(err, deletedData){
         if (err) {
             next(err);
         }else{
+            console.log(deletedData)
             res.json(deletedData);
         }
     })
