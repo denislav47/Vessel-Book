@@ -21,7 +21,7 @@
                     <p *ngIf="ship.edit != true">{{ship.name}}</p>
 
                     <input type="text" *ngIf="ship.edit == true" id="inIMO" [value]="ship.IMO">
-                    <p *ngIf="ship.edit != true">{{ship.IMO}}</p>
+                    <p *ngIf="ship.edit != true">IMO:{{ship.IMO}}</p>
 
                     <input type="text" *ngIf="ship.edit == true" id="inType" [value]="ship.type">
                     <p *ngIf="ship.edit != true">{{ship.type}}</p>
@@ -34,9 +34,14 @@
 
                     <input id="imageUp" *ngIf="ship.edit == true" type="file">
 
-                    <div id="imageBox" *ngFor="let image of ship.images">
-                        <img [src]="image" alt="image">
+                    <div id="imageBox">
+                        <img [src]="image" *ngFor="let image of ship.images" class="mySlides-{{i}}" alt="image">
+                        
                     </div>  
+                    <button class="w3-button w3-black w3-display-left" (click)="plusDivs(-1,i)">&#10094;</button>
+                    <button class="w3-button w3-black w3-display-right" (click)="plusDivs(1,i)">&#10095;</button>
+
+                    
                     
                 </div>
             </div>

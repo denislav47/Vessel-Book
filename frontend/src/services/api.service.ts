@@ -32,15 +32,17 @@ export class ApiService {
     }
 
     createShip(ship:any) {
-      return this.http.post<Ship>(this.url + '/ship', ship).subscribe(data => {
-        console.log(data);
-      });  
-    }  
+      return this.http.post<Ship>(this.url + '/ship', ship);  
+    } 
+    
+    updateShip(ship:any, id: string){
+      return this.http.put<Ship>(this.url + '/ship/' +id,ship);
+    }
 
     deleteShip(id: string){
       return this.http.delete<Ship>(this.url + '/ship/' + id).subscribe(data => {
         console.log(data);
-      });
+    });
       
     }
 

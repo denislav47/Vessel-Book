@@ -7,8 +7,9 @@ var mongoose = require('mongoose'); // Utilizamos la librería de mongoose
 
 var app = express();
 
-mongoose.connect('mongodb://localhost:27017/dbTest1', {useNewUrlParser: true, useUnifiedTopology: true});
+mongoose.connect('mongodb://localhost:27017/dbTest1', {useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false });
 mongoose.set('useCreateIndex', true);
+
 
 var shipModel = require('../models/ship.model');
 
@@ -50,24 +51,24 @@ router.post('/', jsonParser , function(req,res,next){
     })
 })
 
-router.put('/:id', function(req,res){
-    let shipId = req.params.id;
-    let ship = req.body;
-    console.log(req.body, shipId);
+router.put('/:id',jsonParser, async function(req,res,next){
+    const filter = { _id: req.params.id };
+    const update = req.body;
 
-    shipModel.findByIdAndUpdate(shipId, ship, function(err,updatedData){
+    await shipModel.findOneAndUpdate(filter, update, {new: true}, function(err,data){
         if (err) {
             next(err);
         }else{
-            res.json(updatedData);
+            res.json(data);
         }
-    })
+    });
+
 })
 
 router.delete('/:id', function(req,res){
     let shipId = req.params.id;
     console.log(req.params)
-    shipModel.findOneAndDelete({_id:shipId}, function(err, deletedData){
+    shipModel.findOneAndRemove({_id:shipId}, function(err, deletedData){
         if (err) {
             next(err);
         }else{

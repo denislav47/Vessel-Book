@@ -11,24 +11,44 @@ export class AppComponent {
   imagesPath:String = '../assets/images/';
   shipList:any = [];
   shipListDisplay:any = [];
-  imagen: string='';
   editMode: Boolean = false;
+  slideIndex = 1;
+
 
   constructor (public apiService : ApiService) {}
   
   ngOnInit(){
     
     this.getAll();
+    
+    for(let i = 0; i < this.shipListDisplay.length; i++){
+      this.showDivs(1,i);
+    } 
 
+  }
+
+  showDivs(n: any,key:number){
+    let x = document.getElementsByClassName("mySlides-"+key.toString()) as HTMLCollectionOf<HTMLElement>;
+    if (n > x.length) {this.slideIndex = 1}
+    if (n < 1) {this.slideIndex = x.length}
+    for (let i = 0; i < x.length; i++) {
+      x[i].style.display = "none";  
+    }
+    x[this.slideIndex-1].style.display = "block";
+  }
+
+  plusDivs(n:number,key:number) {
+    console.log(this.slideIndex += n,key, "AL MANDAR LLAMAR LA FUNCION")
+    this.showDivs(this.slideIndex += n,key);
   }
 
   getAll(){
     console.log('GET ALL')
     this.apiService.getShips().subscribe((res: any) => {
-      console.log(res)
+      console.log(res.length)
       if(res!=[]){
+        
         this.shipList = res;
-        this.imagen= this.shipList[0].images[0];
         this.shipListDisplay=this.shipList
       }
       
@@ -58,15 +78,22 @@ export class AppComponent {
     }
     data = {name: name.value, IMO: IMO.value, type: type.value, owner: owner.value, contact: contact.value, images: images}
     console.log(data);
-    this.apiService.createShip(data);
+    this.apiService.createShip(data).subscribe(data => {
+      console.log(data);
+      this.shipListDisplay.push(data)
+    });
 
-    this.apiService.getShips().subscribe((res: any) => {
-      console.log('GET ships')
-      this.shipList = res;
-      this.imagen= this.shipList[0].images[0];
-      this.shipListDisplay=this.shipList 
-      console.log(this.shipListDisplay)
-    })
+    let elem = document.getElementById('popup')
+    if(elem){
+      elem.style.display = "none";
+    } 
+
+    name.value='';
+    IMO.value='';
+    type.value='';
+    owner.value='';
+    contact.value='';
+    image.value='';
    
   }
 
@@ -80,9 +107,13 @@ export class AppComponent {
     let contact = document.getElementById('inContact') as HTMLInputElement
     let image = document.getElementById("imageUp") as HTMLInputElement
     
-    let data = {name: name.value, IMO: IMO.value, type: type.value, owner: owner.value, contact: contact.value, images: this.shipListDisplay[key].images.push(image.value)}
+    let data = {name: name.value, IMO: IMO.value, type: type.value, owner: owner.value, contact: contact.value, images: this.shipListDisplay[key].images}
     
     console.log(data);
+
+    this.apiService.updateShip(data,this.shipListDisplay[key]._id).subscribe(data =>{
+      this.shipListDisplay[key] = data
+    })
 
     delete this.shipListDisplay[key].edit
   }
@@ -96,14 +127,7 @@ export class AppComponent {
     this.apiService.deleteShip(this.shipListDisplay[key]._id);
     //this.shipListDisplay.splice(key)
     
-    this.apiService.getShips().subscribe((res: any) => {
-      console.log('GET ships')
-      this.shipListDisplay=[]
-      this.shipList=[]
-      this.shipList = res;
-      this.imagen= this.shipList[0].images[0];
-      this.shipListDisplay=this.shipList
-    })
+    this.shipListDisplay.splice(key,1);
   }
 
   close(){
@@ -131,10 +155,11 @@ export class AppComponent {
     console.log(this.shipList, search)
     this.shipListDisplay=[]
     this.shipList.map((element: any) =>{
-      if(element.name.toLowerCase().includes(search.toLowerCase())){
+      if(element.name.toLowerCase().includes(search.toLowerCase())|| element.IMO.toLowerCase().includes(search.toLowerCase())){
         this.shipListDisplay.indexOf(element) === -1 ? this.shipListDisplay.push(element):
         console.log(element.name)
       }
+      
     })
   }
 }
