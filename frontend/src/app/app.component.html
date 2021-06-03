@@ -12,7 +12,7 @@
                 
                 <div class="shipCard" *ngFor="let ship of shipListDisplay ; let i = index">
                     <button id="editBtn" (click)="edit(i)" *ngIf="ship.edit != true">Edit</button>
-                    <button id="deleteBtn" (click)="delete(i)" *ngIf="ship.edit != true">Delete</button>
+                    <button id="deleteBtn" (click)="deleteConf(i)" *ngIf="ship.edit != true">Delete</button>
 
                     <button id="saveEdidBtn" (click)="save(i)" *ngIf="ship.edit == true">Save</button>
                     <button id="cancelBtn" (click)="cancelEdit(i)" *ngIf="ship.edit == true">Cancel</button>
@@ -35,8 +35,10 @@
                     <input id="imageUp" *ngIf="ship.edit == true" type="file">
 
                     <div id="imageBox">
-                        <img [src]="image" *ngFor="let image of ship.images" class="mySlides-{{i}}" alt="image">
-                        
+                        <img [src]="imagesList[i]"  class="mySlides-{{i}}" alt="image">
+                        <button id="removeImage" (click)="removeImage(i)">Remove</button>
+                        <button id="addImage" onclick="document.getElementById('getFile').click()" >Add</button>
+                        <input type='file' id="getFile" style="display:none" (input)='uploadImage(i)'>
                     </div>  
                     <button class="w3-button w3-black w3-display-left" (click)="plusDivs(-1,i)">&#10094;</button>
                     <button class="w3-button w3-black w3-display-right" (click)="plusDivs(1,i)">&#10095;</button>
@@ -55,6 +57,11 @@
                 <input id="newImageUp"  type="file">
                 <button id="saveBtn" (click)="saveNew()">Save</button>
                 <button id="closeBtn" (click)="close()">Close</button>
+            </div>
+
+            <div id="confPopup">
+                <button id="confDelete" (click)="delete()">Delete</button>
+                <button id="cancelDelete" (click)="closeConf()">Cancel</button>
             </div>
         </div>
 

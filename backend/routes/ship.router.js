@@ -16,7 +16,6 @@ var shipModel = require('../models/ship.model');
 var jsonParser = bodyParser.json()
 
 router.get('/', function(req,res){
-    console.log('hola bb')
     shipModel.find( function(err, doc){
         if (err) {
             next(err);
@@ -54,7 +53,7 @@ router.post('/', jsonParser , function(req,res,next){
 router.put('/:id',jsonParser, async function(req,res,next){
     const filter = { _id: req.params.id };
     const update = req.body;
-
+    console.log(update, filter)
     await shipModel.findOneAndUpdate(filter, update, {new: true}, function(err,data){
         if (err) {
             next(err);

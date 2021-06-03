@@ -11,46 +11,43 @@ export class AppComponent {
   imagesPath:String = '../assets/images/';
   shipList:any = [];
   shipListDisplay:any = [];
+  imagesList:any = []
   editMode: Boolean = false;
-  slideIndex = 1;
-
+  slideIndex:any = [];
+  deleteKey:number = -1;
 
   constructor (public apiService : ApiService) {}
   
   ngOnInit(){
     
     this.getAll();
-    
-    for(let i = 0; i < this.shipListDisplay.length; i++){
-      this.showDivs(1,i);
-    } 
 
-  }
-
-  showDivs(n: any,key:number){
-    let x = document.getElementsByClassName("mySlides-"+key.toString()) as HTMLCollectionOf<HTMLElement>;
-    if (n > x.length) {this.slideIndex = 1}
-    if (n < 1) {this.slideIndex = x.length}
-    for (let i = 0; i < x.length; i++) {
-      x[i].style.display = "none";  
-    }
-    x[this.slideIndex-1].style.display = "block";
   }
 
   plusDivs(n:number,key:number) {
-    console.log(this.slideIndex += n,key, "AL MANDAR LLAMAR LA FUNCION")
-    this.showDivs(this.slideIndex += n,key);
+    if((n>0 && this.slideIndex[key]<this.shipListDisplay[key].images.length-1)
+      || (n<0 && this.slideIndex[key]>0)){
+      this.slideIndex[key] += n;
+      this.imagesList[key] = this.shipListDisplay[key].images[this.slideIndex[key]]
+    }
+    
   }
+
+  
 
   getAll(){
     console.log('GET ALL')
     this.apiService.getShips().subscribe((res: any) => {
       console.log(res.length)
       if(res!=[]){
-        
         this.shipList = res;
         this.shipListDisplay=this.shipList
       }
+      this.shipListDisplay.forEach((element: any) => {
+        this.imagesList.push(element.images[0])
+        console.log(this.imagesList)
+        this.slideIndex.push(0)
+      });
       
     })
   }
@@ -105,9 +102,9 @@ export class AppComponent {
     let type = document.getElementById('inType') as HTMLInputElement
     let owner = document.getElementById('inOwner') as HTMLInputElement
     let contact = document.getElementById('inContact') as HTMLInputElement
-    let image = document.getElementById("imageUp") as HTMLInputElement
     
-    let data = {name: name.value, IMO: IMO.value, type: type.value, owner: owner.value, contact: contact.value, images: this.shipListDisplay[key].images}
+    
+    let data = {name: name.value, IMO: IMO.value, type: type.value, owner: owner.value, contact: contact.value}
     
     console.log(data);
 
@@ -118,16 +115,59 @@ export class AppComponent {
     delete this.shipListDisplay[key].edit
   }
 
-  
+  uploadImage(key:number){
+    console.log('me llaman')
+    let imageIn = document.getElementById('getFile')
+    if (imageIn){
+      imageIn.click()
+    }
+    let image = document.getElementById("getFile") as HTMLInputElement
+    console.log(image.value)
+    let imagesArray = this.shipListDisplay[key].images
+    if (image.value!=undefined){
+      imagesArray.push(this.imagesPath+image.value.split('C:\\fakepath\\',2)[1]);
+    }
+    console.log(imagesArray)
 
-  delete(key:any){
-    console.log(this.shipListDisplay)
-    console.log(key)
+    this.apiService.updateShip({images :imagesArray},this.shipListDisplay[key]._id).subscribe(data =>{
+      // this.shipListDisplay[key] = data
+      console.log(data)
+    })
+
+  }
+
+  removeImage(key:number){
+    console.log(this.slideIndex[key])
+    console.log(this.imagesList[key]);
+    for (let i = 0; i <  this.slideIndex.length; i++) {
+      if (this.imagesList[key] === this.slideIndex[i]) console.log(i);
+    }
+    //BUSCAR LA IMAGEN A BORRAR EN EL ARRAY, ELIMINARLA Y HACER UPDATE CON EL ARRAY SIN LA IMAGEN
+  }
+
+  delete(){
     
-    this.apiService.deleteShip(this.shipListDisplay[key]._id);
-    //this.shipListDisplay.splice(key)
+    this.apiService.deleteShip(this.shipListDisplay[this.deleteKey]._id);
     
-    this.shipListDisplay.splice(key,1);
+    this.shipListDisplay.splice(this.deleteKey,1);
+    this.deleteKey = -1;
+    this.closeConf();
+  }
+
+  deleteConf(key:any){
+    this.deleteKey = key
+    let elem = document.getElementById('confPopup')
+    if(elem){
+      elem.style.display = "revert";
+    } 
+  }
+
+  closeConf(){
+    let elem = document.getElementById('confPopup')
+    if(elem){
+      elem.style.display = "none";
+    } 
+    this.deleteKey = -1;
   }
 
   close(){
