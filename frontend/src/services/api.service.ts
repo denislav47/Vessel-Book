@@ -10,6 +10,7 @@ export class Ship {
     type: String;
     owner: String;
     contact: string;    
+    images: any;
   }
 
 @Injectable()

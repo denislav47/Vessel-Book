@@ -37,8 +37,8 @@
                     <div id="imageBox">
                         <img [src]="imagesList[i]"  class="mySlides-{{i}}" alt="image">
                         <button id="removeImage" (click)="removeImage(i)">Remove</button>
-                        <button id="addImage" onclick="document.getElementById('getFile').click()" >Add</button>
-                        <input type='file' id="getFile" style="display:none" (input)='uploadImage(i)'>
+                        <button id="addImage" (click)="uploadImage(i)" >Add</button>
+                        <input type='file' id="getFile" style="display:none" (input)='addImage()'>
                     </div>  
                     <button class="w3-button w3-black w3-display-left" (click)="plusDivs(-1,i)">&#10094;</button>
                     <button class="w3-button w3-black w3-display-right" (click)="plusDivs(1,i)">&#10095;</button>

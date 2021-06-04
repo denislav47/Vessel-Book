@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ApiService } from '../services/api.service'
 
 
@@ -15,6 +15,7 @@ export class AppComponent {
   editMode: Boolean = false;
   slideIndex:any = [];
   deleteKey:number = -1;
+  imageAddKey:number
 
   constructor (public apiService : ApiService) {}
   
@@ -44,7 +45,13 @@ export class AppComponent {
         this.shipListDisplay=this.shipList
       }
       this.shipListDisplay.forEach((element: any) => {
-        this.imagesList.push(element.images[0])
+        
+        if (element.images[0]==undefined){
+          this.imagesList.push( this.imagesPath+'nop.jpg')
+        } else {
+          this.imagesList.push(element.images[0])
+        }
+        
         console.log(this.imagesList)
         this.slideIndex.push(0)
       });
@@ -70,27 +77,51 @@ export class AppComponent {
     let image = document.getElementById("newImageUp") as HTMLInputElement
     let images : any = [];
     
-    if (image.value!=undefined){
-      images.push(this.imagesPath+image.value.split('C:\\fakepath\\',2)[1]);
+    let emailRegex = new RegExp("^[\\w\\.]+@(gmail.com|hotmail.com|icb.bg)$") 
+    let imoRegex = new RegExp("^(IMO|imo|Imo|)?[\\s]?[0-9]+$")
+
+    if(name.value, IMO.value, type.value, owner.value, contact.value != undefined){
+        if(contact.value.match(emailRegex)&&(IMO.value.match(imoRegex))){
+          console.log(image.value)
+        if (image.value!=''){
+          images.push(this.imagesPath+image.value.split('C:\\fakepath\\',2)[1]);
+        } else {
+          images.push(this.imagesPath+'nop.jpg');
+        }
+        data = {name: name.value, IMO: IMO.value, type: type.value, owner: owner.value, contact: contact.value, images: images}
+        console.log(data);
+        this.apiService.createShip(data).subscribe(data => {
+          let ship = data
+          console.log(ship);
+          this.shipListDisplay.push(ship)
+          
+          this.imagesList.push(images)
+          
+         
+        });
+    
+        let elem = document.getElementById('popup')
+        if(elem){
+          elem.style.display = "none";
+        } 
+    
+        name.value='';
+        IMO.value='';
+        type.value='';
+        owner.value='';
+        contact.value='';
+        image.value='';
+
+
+      } else {
+        console.log('no data')
+        //DAR ERROR AL USUARIO
+      }
     }
-    data = {name: name.value, IMO: IMO.value, type: type.value, owner: owner.value, contact: contact.value, images: images}
-    console.log(data);
-    this.apiService.createShip(data).subscribe(data => {
-      console.log(data);
-      this.shipListDisplay.push(data)
-    });
 
-    let elem = document.getElementById('popup')
-    if(elem){
-      elem.style.display = "none";
-    } 
+    
 
-    name.value='';
-    IMO.value='';
-    type.value='';
-    owner.value='';
-    contact.value='';
-    image.value='';
+    
    
   }
 
@@ -116,33 +147,68 @@ export class AppComponent {
   }
 
   uploadImage(key:number){
-    console.log('me llaman')
+    console.log('me llaman',key, this.shipListDisplay)
+
+    this.imageAddKey=key
     let imageIn = document.getElementById('getFile')
     if (imageIn){
       imageIn.click()
     }
+
+  }
+
+  addImage(){
     let image = document.getElementById("getFile") as HTMLInputElement
     console.log(image.value)
-    let imagesArray = this.shipListDisplay[key].images
-    if (image.value!=undefined){
-      imagesArray.push(this.imagesPath+image.value.split('C:\\fakepath\\',2)[1]);
-    }
-    console.log(imagesArray)
+    let imagesArray = this.shipListDisplay[this.imageAddKey].images
+    let cont=0
+    imagesArray.forEach((element: any) => {
+      console.log(element)
+      if(element == '../assets/images/nop.jpg'){
+        console.log('true')
+        imagesArray.splice(cont,1)
+      }
+      cont++
+    });
 
+    imagesArray.push(this.imagesPath+image.value.split('C:\\fakepath\\',2)[1]);
+
+    this.apiService.updateShip({images :imagesArray},this.shipListDisplay[this.imageAddKey]._id).subscribe(data =>{
+      this.shipListDisplay[this.imageAddKey] = data
+      console.log(data)
+    })
+    
+
+    if(this.slideIndex[this.imageAddKey]==0){
+      this.plusDivs(1,this.imageAddKey);
+    } else {
+      this.plusDivs(-1,this.imageAddKey);
+    }
+
+    this.imageAddKey=-1;
+    
+  }
+
+  removeImage(key:number){
+    console.log(key)
+    console.log(this.slideIndex[key])
+    console.log(this.imagesList[key]);
+    
+    console.log(this.shipListDisplay[key].images[this.slideIndex[key]])
+
+    this.shipListDisplay[key].images.splice(this.slideIndex[key],1)
+
+    let imagesArray = this.shipListDisplay[key].images
     this.apiService.updateShip({images :imagesArray},this.shipListDisplay[key]._id).subscribe(data =>{
       // this.shipListDisplay[key] = data
       console.log(data)
     })
-
-  }
-
-  removeImage(key:number){
-    console.log(this.slideIndex[key])
-    console.log(this.imagesList[key]);
-    for (let i = 0; i <  this.slideIndex.length; i++) {
-      if (this.imagesList[key] === this.slideIndex[i]) console.log(i);
+    if(this.slideIndex[key]==0){
+      this.plusDivs(1,key);
+    } else {
+      this.plusDivs(-1,key);
     }
-    //BUSCAR LA IMAGEN A BORRAR EN EL ARRAY, ELIMINARLA Y HACER UPDATE CON EL ARRAY SIN LA IMAGEN
+    
   }
 
   delete(){
@@ -171,11 +237,27 @@ export class AppComponent {
   }
 
   close(){
+    
+    let name = document.getElementById('newName') as HTMLInputElement
+    let IMO = document.getElementById('newIMO') as HTMLInputElement
+    let type = document.getElementById('newType') as HTMLInputElement
+    let owner = document.getElementById('newOwner') as HTMLInputElement
+    let contact = document.getElementById('newContact') as HTMLInputElement
+    let image = document.getElementById("newImageUp") as HTMLInputElement
+
+    name.value='';
+    IMO.value='';
+    type.value='';
+    owner.value='';
+    contact.value='';
+    image.value='';
+    
+
     let elem = document.getElementById('popup')
     if(elem){
       elem.style.display = "none";
     } 
-    
+
   }
 
   edit(key:number){
