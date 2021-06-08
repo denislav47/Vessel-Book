@@ -52,7 +52,7 @@ export class AppComponent {
           this.imagesList.push(element.images[0])
         }
         
-        console.log(this.imagesList)
+        // console.log(this.imagesList)
         this.slideIndex.push(0)
       });
       
@@ -178,6 +178,7 @@ export class AppComponent {
       console.log(data)
     })
     
+    this.imagesList[this.imageAddKey] = this.shipListDisplay[this.imageAddKey].images[0] 
 
     if(this.slideIndex[this.imageAddKey]==0){
       this.plusDivs(1,this.imageAddKey);
@@ -190,9 +191,15 @@ export class AppComponent {
   }
 
   removeImage(key:number){
-    console.log(key)
-    console.log(this.slideIndex[key])
-    console.log(this.imagesList[key]);
+    // console.log(key)
+    // console.log(this.slideIndex[key])
+    // console.log(this.imagesList[key]);
+
+    let isLastImage = false
+    console.log(this.shipListDisplay[key].images.length)
+    if(this.shipListDisplay[key].images.length <=1){
+      isLastImage = true
+    }
     
     console.log(this.shipListDisplay[key].images[this.slideIndex[key]])
 
@@ -209,6 +216,10 @@ export class AppComponent {
       this.plusDivs(-1,key);
     }
     
+    if(isLastImage){
+      this.shipListDisplay[key].images = this.imagesPath+'nop.jpg'
+      this.imagesList[key] = this.shipListDisplay[key].images
+    }
   }
 
   delete(){
@@ -274,7 +285,7 @@ export class AppComponent {
   search(){
     let searchElement = document.getElementById("inSearch") as HTMLInputElement
     let search = searchElement.value
-    console.log(this.shipList, search)
+    //console.log(this.shipList, search)
     this.shipListDisplay=[]
     this.shipList.map((element: any) =>{
       if(element.name.toLowerCase().includes(search.toLowerCase())|| element.IMO.toLowerCase().includes(search.toLowerCase())){
