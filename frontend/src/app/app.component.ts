@@ -15,7 +15,8 @@ export class AppComponent {
   editMode: Boolean = false;
   slideIndex:any = [];
   deleteKey:number = -1;
-  imageAddKey:number
+  imageAddKey:number;
+  isPopup:boolean = false;
 
   constructor (public apiService : ApiService) {}
   
@@ -64,7 +65,15 @@ export class AppComponent {
     if(elem){
       elem.style.display = "revert";
     } 
+    this.isPopup=true;
 
+  }
+
+  newImage() {
+    let imageIn = document.getElementById('newImageUp')
+    if (imageIn){
+      imageIn.click()
+    }
   }
 
   saveNew(){
@@ -83,34 +92,35 @@ export class AppComponent {
     if(name.value, IMO.value, type.value, owner.value, contact.value != undefined){
         if(contact.value.match(emailRegex)&&(IMO.value.match(imoRegex))){
           console.log(image.value)
-        if (image.value!=''){
-          images.push(this.imagesPath+image.value.split('C:\\fakepath\\',2)[1]);
-        } else {
-          images.push(this.imagesPath+'nop.jpg');
-        }
-        data = {name: name.value, IMO: IMO.value, type: type.value, owner: owner.value, contact: contact.value, images: images}
-        console.log(data);
-        this.apiService.createShip(data).subscribe(data => {
-          let ship = data
-          console.log(ship);
-          this.shipListDisplay.push(ship)
+          if (image.value!=''){
+            images.push(this.imagesPath+image.value.split('C:\\fakepath\\',2)[1]);
+          } else {
+            images.push(this.imagesPath+'nop.jpg');
+          }
+          data = {name: name.value, IMO: IMO.value, type: type.value, owner: owner.value, contact: contact.value, images: images}
+          console.log(data);
+          this.apiService.createShip(data).subscribe(data => {
+            let ship = data
+            console.log(ship);
+            this.shipListDisplay.push(ship)
+            
+            this.imagesList.push(images)
+            
           
-          this.imagesList.push(images)
-          
-         
-        });
-    
-        let elem = document.getElementById('popup')
-        if(elem){
-          elem.style.display = "none";
-        } 
-    
-        name.value='';
-        IMO.value='';
-        type.value='';
-        owner.value='';
-        contact.value='';
-        image.value='';
+          });
+      
+          let elem = document.getElementById('popup')
+          if(elem){
+            elem.style.display = "none";
+            this.isPopup=false
+          } 
+      
+          name.value='';
+          IMO.value='';
+          type.value='';
+          owner.value='';
+          contact.value='';
+          image.value='';
 
 
       } else {
@@ -187,6 +197,11 @@ export class AppComponent {
     }
 
     this.imageAddKey=-1;
+    console.log('he llegado')
+    let btnOK = document.getElementById("saveEdidBtn")
+    if (btnOK!= null){
+      btnOK.click()
+    }
     
   }
 
@@ -219,6 +234,10 @@ export class AppComponent {
     if(isLastImage){
       this.shipListDisplay[key].images = this.imagesPath+'nop.jpg'
       this.imagesList[key] = this.shipListDisplay[key].images
+    }
+    let btnOK = document.getElementById("saveEdidBtn")
+    if (btnOK!= null){
+      btnOK.click()
     }
   }
 
@@ -263,10 +282,11 @@ export class AppComponent {
     contact.value='';
     image.value='';
     
-
+    
     let elem = document.getElementById('popup')
     if(elem){
       elem.style.display = "none";
+      this.isPopup=false;
     } 
 
   }

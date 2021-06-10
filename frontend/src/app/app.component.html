@@ -3,11 +3,14 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     </header>
     <body>
-        <div id="container">
+        <div id="container" [ngClass]="{'parentDisable': isPopup}">
             <div id="header">
                 <h1>Vessel Book</h1>
-                <button id="addBtn" class="addShipBtn" (click)="add()"><i class="fa fa-plus"></i>Add new ship</button>
                 <input type="search" id="inSearch" (keyup)="search()" placeholder="Search by IMO or name...">
+                <button id="addBtn" class="addShipBtn" (click)="add()"><i class="fa fa-plus">Add new ship</i></button>
+                
+                
+                
                 <!-- <button id="search" class="btn"><i class="fa fa-search"></i></button> -->
             </div>
             
@@ -15,7 +18,7 @@
                 
                 <div class="shipCard" *ngFor="let ship of shipListDisplay ; let i = index">
                     <div id="mainBtns">
-                        <button id="deleteBtn" (click)="deleteConf(i)" *ngIf="ship.edit != true" class="deleteBtn"><i class="fa fa-close"></i></button>
+                        <button id="deleteBtn" [ngClass]="{'disabledBtn': isPopup}" (click)="deleteConf(i)" *ngIf="ship.edit != true" class="deleteBtn"><i class="fa fa-close"></i></button>
                         <button id="editBtn" (click)="edit(i)" *ngIf="ship.edit != true" class="editBtn"><i class="fa fa-pencil"></i></button>
 
                         <button id="cancelBtn" (click)="cancelEdit(i)" *ngIf="ship.edit == true" class="cancelBtn"><i class="fa fa-ban"></i></button>
@@ -30,8 +33,8 @@
                         
                         <input type='file' id="getFile" style="display:none" (input)='addImage()'>
                         <div id="arrows">
-                            <button *ngIf="ship.images.length > 0" class="w3-button w3-black w3-display-left prev" id="imageBtn" (click)="plusDivs(-1,i)">&#10094;</button>
-                            <button *ngIf="ship.images.length > 0" class="w3-button w3-black w3-display-right next" id="imageBtn" (click)="plusDivs(1,i)">&#10095;</button>
+                            <button *ngIf="ship.images.length > 1" class="w3-button w3-black w3-display-left prev" id="imageBtn" (click)="plusDivs(-1,i)">&#10094;</button>
+                            <button *ngIf="ship.images.length > 1" class="w3-button w3-black w3-display-right next" id="imageBtn" (click)="plusDivs(1,i)">&#10095;</button>
                         </div>
                         
                     </div>  
@@ -94,40 +97,61 @@
                         
 
                         
-                    </div>
-                    
-                    
-
-                    
-
-                    
+                    </div> 
                     
                 </div>
+
+                
             </div>
             
             <div id="popup">
-                <input id="newIMO" type="text" placeholder="IMO">
-                <input id="newName" type="text" placeholder="Name">
-                <input id="newType" type="text" placeholder="Type">
-                <input id="newOwner" type="text" placeholder="Owner">
-                <input id="newContact" type="text" placeholder="Contact"> 
-                <input id="newImageUp"  type="file">
-                <button id="saveBtn" (click)="saveNew()">Save</button>
-                <button id="closeBtn" (click)="close()">Close</button>
+                <div id="popupData">
+                    <table>
+                        <tr>
+                            <td><input id="newIMO" type="text" placeholder="IMO"></td>
+                            <td><input id="newName" type="text" placeholder="Name"></td>
+                        </tr>
+                        <tr>
+                            <td><input id="newType" type="text" placeholder="Type"></td>
+                            <td><input id="newOwner" type="text" placeholder="Owner"></td>
+                        </tr>
+                        <tr>
+                            <td><input id="newContact" type="text" placeholder="Contact"> </td>
+                            <td></td>
+                            <input id="newImageUp" type="file" style="display: none;">
+                        </tr>
+                        <tr>
+                            <td><button id="saveImageBtn" (click)="newImage()" class="uploadBtn"><i class="fa fa-file-image-o"> Upload Image</i></button></td>
+                            <td>
+                                <button id="closeBtn" (click)="close()" class="cancelBtn"><i class="fa fa-ban"> Cancel</i></button>
+                                <button id="saveBtn" (click)="saveNew()" class="saveBtn"><i class="fa fa-floppy-o"> Save</i></button>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
             </div>
 
             <div id="confPopup">
-                <button id="confDelete" (click)="delete()">Delete</button>
-                <button id="cancelDelete" (click)="closeConf()">Cancel</button>
+                <div id="confPopupData">
+                   
+                    <table>
+                        <tr>
+                            <td colspan="2">Do you want to delete the vessel?</td>
+                        </tr>
+                        <tr>
+                            <td><button id="confDelete" (click)="delete()"  class="deleteBtn"><i class="fa fa-trash-o"> Delete</i></button></td>
+                            <td><button id="cancelDelete" (click)="closeConf()"  class="saveBtn"><i class="fa fa-ban"> Cancel</i></button></td>
+                        </tr>
+                    </table>
+                    
+                    
+                </div>
             </div>
         </div>
 
 
     </body>
 
-    <footer>
-        <p>Hola bb</p>
-    </footer>
     
 </html>
 
