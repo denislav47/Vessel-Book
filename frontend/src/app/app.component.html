@@ -9,14 +9,11 @@
                 <input type="search" id="inSearch" (keyup)="search()" placeholder="Search by IMO or name...">
                 <button id="addBtn" class="addShipBtn" (click)="add()"><i class="fa fa-plus">Add new ship</i></button>
                 
-                
-                
-                <!-- <button id="search" class="btn"><i class="fa fa-search"></i></button> -->
             </div>
             
             <div id="mainContainer">
-                
-                <div class="shipCard" *ngFor="let ship of shipListDisplay ; let i = index">
+
+                <div class="ship" *ngFor="let ship of shipListDisplay ; let i = index">
                     <div id="mainBtns">
                         <button id="deleteBtn" [ngClass]="{'disabledBtn': isPopup}" (click)="deleteConf(i)" *ngIf="ship.edit != true" class="deleteBtn"><i class="fa fa-close"></i></button>
                         <button id="editBtn" (click)="edit(i)" *ngIf="ship.edit != true" class="editBtn"><i class="fa fa-pencil"></i></button>
@@ -25,81 +22,86 @@
                         <button id="saveEdidBtn" (click)="save(i)" *ngIf="ship.edit == true" class="saveBtn"><i class="fa fa-check"></i></button>
                     
                     </div>
-                    
 
-                    <div id="imageBox">
-                        <img [src]="imagesList[i]"  class="mySlides-{{i}}" alt="image">
-                        
-                        
-                        <input type='file' id="getFile" style="display:none" (input)='addImage()'>
-                        <div id="arrows">
-                            <button *ngIf="ship.images.length > 1" class="w3-button w3-black w3-display-left prev" id="imageBtn" (click)="plusDivs(-1,i)">&#10094;</button>
-                            <button *ngIf="ship.images.length > 1" class="w3-button w3-black w3-display-right next" id="imageBtn" (click)="plusDivs(1,i)">&#10095;</button>
-                        </div>
-                        
-                    </div>  
 
-                    <div id="info">
-
-                        <div id="editInfo" *ngIf="ship.edit == true">
-                            <button id="removeImage" (click)="removeImage(i)" class="removeBtn"  ><i class="fa fa-trash-o"></i></button>
-                            <button id="addImage" (click)="uploadImage(i)" class="addBtn"  ><i class="fa fa-plus"></i></button><br>
-                            <table>
-                                <tr>
-                                    <td>Name: </td>
-                                    <td><input type="text" id="inName" [value]="ship.name"></td>
-                                </tr>
-                                <tr>
-                                    <td>IMO: </td>
-                                    <td><input type="text" id="inIMO" [value]="ship.IMO"></td>
-                                </tr>
-                                <tr>
-                                    <td>Type: </td>
-                                    <td><input type="text" id="inType" [value]="ship.type"></td>
-                                </tr>
-                                <tr>
-                                    <td>Owner: </td>
-                                    <td><input type="text" id="inOwner" [value]="ship.owner"></td>
-                                </tr>
-                                <tr>
-                                    <td>Contact: </td>
-                                    <td><input type="text" id="inContact" [value]="ship.contact"></td>
-                                </tr>
-                            </table>
-                            <input id="imageUp" type="file" style="display: none;">
-                        </div>
+                    <div class="card" >
                         
-
-                        <div *ngIf="ship.edit != true" id="shipData">
-                            <table>
-                                <tr>
-                                    <td>Name:</td>
-                                    <td>{{ship.name}}</td>
-                                </tr>
-                                <tr>
-                                    <td>IMO:</td>
-                                    <td>{{ship.IMO}}</td>
-                                </tr>
-                                <tr>
-                                    <td>Type:</td>
-                                    <td>{{ship.type}}</td>
-                                </tr>
-                                <tr>
-                                    <td>Owner:</td>
-                                    <td>{{ship.owner}}</td>
-                                </tr>
-                                <tr>
-                                    <td>Contact:</td>
-                                    <td>{{ship.contact}}</td>
-                                </tr>
-                            </table>
-                        </div>
+    
+                        <div id="imageBox">
+                            <img [src]="imagesList[i]"  class="mySlides-{{i}}" alt="image">
+                            
+                            
+                            <input type='file' id="getFile" style="display:none" (input)='addImage()'>
+                            <div id="arrows">
+                                <button *ngIf="ship.images.length > 1" class="w3-button w3-black w3-display-left prev" id="imageBtn" (click)="plusDivs(-1,i)">&#10094;</button>
+                                <button *ngIf="ship.images.length > 1" class="w3-button w3-black w3-display-right next" id="imageBtn" (click)="plusDivs(1,i)">&#10095;</button>
+                            </div>
+                            
+                        </div>  
+    
+                        <div id="info">
+    
+                            <div id="editInfo" *ngIf="ship.edit == true">
+                                <button id="removeImage" (click)="removeImage(i)" class="removeBtn"  ><i class="fa fa-trash-o"></i></button>
+                                <button id="addImage" (click)="uploadImage(i)" class="addBtn"  ><i class="fa fa-plus"></i></button><br>
+                                <table>
+                                    <tr>
+                                        <td>Name: </td>
+                                        <td><input type="text" id="inName" [value]="ship.name"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>IMO: </td>
+                                        <td><input type="text" id="inIMO" [value]="ship.IMO"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Type: </td>
+                                        <td><input type="text" id="inType" [value]="ship.type"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Owner: </td>
+                                        <td><input type="text" id="inOwner" [value]="ship.owner"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Contact: </td>
+                                        <td><input type="text" id="inContact" [value]="ship.contact"></td>
+                                    </tr>
+                                </table>
+                                <input id="imageUp" type="file" style="display: none;">
+                            </div>
+                            
+    
+                            <div *ngIf="ship.edit != true" id="shipData">
+                                <table>
+                                    <tr>
+                                        <td>Name:</td>
+                                        <td>{{ship.name}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>IMO:</td>
+                                        <td>{{ship.IMO}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Type:</td>
+                                        <td>{{ship.type}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Owner:</td>
+                                        <td>{{ship.owner}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Contact:</td>
+                                        <td>{{ship.contact}}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            
+    
+                            
+                        </div> 
                         
-
-                        
-                    </div> 
-                    
+                    </div>
                 </div>
+                
 
                 
             </div>
@@ -108,15 +110,15 @@
                 <div id="popupData">
                     <table>
                         <tr>
-                            <td><input id="newIMO" type="text" placeholder="IMO"></td>
-                            <td><input id="newName" type="text" placeholder="Name"></td>
+                            <td><input id="newIMO" type="text" placeholder="IMO" required></td>
+                            <td><input id="newName" type="text" placeholder="Name" required></td>
                         </tr>
                         <tr>
-                            <td><input id="newType" type="text" placeholder="Type"></td>
-                            <td><input id="newOwner" type="text" placeholder="Owner"></td>
+                            <td><input id="newType" type="text" placeholder="Type" required></td>
+                            <td><input id="newOwner" type="text" placeholder="Owner" required></td>
                         </tr>
                         <tr>
-                            <td><input id="newContact" type="text" placeholder="Contact"> </td>
+                            <td><input id="newContact" type="text" placeholder="Contact" required> </td>
                             <td></td>
                             <input id="newImageUp" type="file" style="display: none;">
                         </tr>

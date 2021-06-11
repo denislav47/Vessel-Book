@@ -38,14 +38,19 @@ export class AppComponent {
   
 
   getAll(){
-    console.log('GET ALL')
+    let regex = new RegExp("^(IMO|imo|Imo|){1}[\\s]?.+$")
     this.apiService.getShips().subscribe((res: any) => {
-      console.log(res.length)
+      //console.log(res.length)
       if(res!=[]){
         this.shipList = res;
         this.shipListDisplay=this.shipList
       }
       this.shipListDisplay.forEach((element: any) => {
+        console.log(element.IMO)
+
+        if (element.IMO.toLowerCase().includes('imo')) {
+          element.IMO = element.IMO.split("imo",2)[1]
+        }        
         
         if (element.images[0]==undefined){
           this.imagesList.push( this.imagesPath+'nop.jpg')
@@ -123,9 +128,17 @@ export class AppComponent {
           image.value='';
 
 
-      } else {
-        console.log('no data')
-        //DAR ERROR AL USUARIO
+      } else { //VALIDATION FAILED
+        let email = document.getElementById('newIMO');
+        if (email != null){
+          email.classList.add('validationFail');
+        }
+
+        let contact = document.getElementById('newContact');
+        if (contact != null){
+          contact.classList.add('validationFail');
+        }
+        
       }
     }
 
@@ -144,16 +157,34 @@ export class AppComponent {
     let owner = document.getElementById('inOwner') as HTMLInputElement
     let contact = document.getElementById('inContact') as HTMLInputElement
     
-    
-    let data = {name: name.value, IMO: IMO.value, type: type.value, owner: owner.value, contact: contact.value}
-    
-    console.log(data);
+    let emailRegex = new RegExp("^[\\w\\.]+@(gmail.com|hotmail.com|icb.bg)$") 
+    let imoRegex = new RegExp("^(IMO|imo|Imo|)?[\\s]?[0-9]+$")
 
-    this.apiService.updateShip(data,this.shipListDisplay[key]._id).subscribe(data =>{
-      this.shipListDisplay[key] = data
-    })
+    if(name.value, IMO.value, type.value, owner.value, contact.value != undefined){
+      if(contact.value.match(emailRegex)&&(IMO.value.match(imoRegex))){
+        let data = {name: name.value, IMO: IMO.value, type: type.value, owner: owner.value, contact: contact.value}
+    
+        console.log(data);
 
-    delete this.shipListDisplay[key].edit
+        this.apiService.updateShip(data,this.shipListDisplay[key]._id).subscribe(data =>{
+          this.shipListDisplay[key] = data
+        })
+
+        delete this.shipListDisplay[key].edit
+      } else { //Validation Fail
+        let email = document.getElementById('inIMO');
+        if (email != null){
+          email.classList.add('validationFail');
+        }
+
+        let contact = document.getElementById('inContact');
+        if (contact != null){
+          contact.classList.add('validationFail');
+        }
+      }
+    }
+    
+    
   }
 
   uploadImage(key:number){
@@ -296,6 +327,7 @@ export class AppComponent {
     
     Object.assign(this.shipListDisplay[key],{edit: true})
     console.log(this.shipListDisplay)
+        
   }
   
   cancelEdit(key:number){
