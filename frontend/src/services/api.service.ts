@@ -2,7 +2,7 @@ import {HttpClientModule, HttpHeaders} from '@angular/common/http'
 import {HttpClient} from '@angular/common/http'
 import {Injectable} from '@angular/core'
 import { Observable } from 'rxjs/internal/Observable';
-import {throwError} from 'rxjs';
+import {throwError, VirtualTimeScheduler} from 'rxjs';
 
 export class Ship {
     IMO: String;
@@ -42,22 +42,13 @@ export class ApiService {
 
     deleteShip(id: string){
       return this.http.delete<Ship>(this.url + '/ship/' + id).subscribe(data => {
-        console.log(data);
     });
-      
     }
 
-    // httpError(error:any) {
-    //     let msg = '';
-    //     if(error.error instanceof ErrorEvent) {
-    //       // client side error
-    //       msg = error.error.message;
-    //     } else {
-    //       // server side error
-    //       msg = `Error Code: ${error.status}\nMessage: ${error.message}`;
-    //     }
-    //     console.log(msg);
-    //     return throwError(msg);
-    //   }
+    getTypes(): any {
+      return this.http.get(this.url + '/type')
+    }
+      
+    
 }
 

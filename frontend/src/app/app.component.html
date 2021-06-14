@@ -55,7 +55,11 @@
                                     </tr>
                                     <tr>
                                         <td>Type: </td>
-                                        <td><input type="text" id="inType" [value]="ship.type"></td>
+                                        <td>
+                                            <select  id="inType">
+                                                <option *ngFor="let type of types">{{type.name}}</option>
+                                            </select>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td>Owner: </td>
@@ -141,8 +145,8 @@
                             <td colspan="2">Do you want to delete the vessel?</td>
                         </tr>
                         <tr>
-                            <td><button id="confDelete" (click)="delete()"  class="deleteBtn"><i class="fa fa-trash-o"> Delete</i></button></td>
-                            <td><button id="cancelDelete" (click)="closeConf()"  class="saveBtn"><i class="fa fa-ban"> Cancel</i></button></td>
+                            <td><button id="confDelete" (click)="delete()"  class="saveBtn"><i class="fa fa-trash-o"> Delete</i></button></td>
+                            <td><button id="cancelDelete" (click)="closeConf()"  class="deleteBtn"><i class="fa fa-ban"> Cancel</i></button></td>
                         </tr>
                     </table>
                     
@@ -156,22 +160,3 @@
 
     
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!-- <mat-toolbar>
-    PS Social
-    <span style="flex: 1 1 auto"></span>
-    <button mat-button routerLink="/register">Register</button>
-</mat-toolbar>
-<router-outlet></router-outlet> -->

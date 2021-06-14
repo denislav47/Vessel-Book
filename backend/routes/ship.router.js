@@ -1,4 +1,3 @@
-
 var express    = require('express');
 var router = express.Router();
 
@@ -25,22 +24,8 @@ router.get('/', function(req,res){
     })
 })
 
-router.get('/:id', function(req,res,next){
-    console.log(req.body)
-    let shipId = req.params.id;
-    shipModel.findById(shipId, function(err, data){
-        if (err) {
-            next(err);
-        }else{
-            res.json(data);
-        }
-    })
-})
-
-router.post('/', jsonParser , function(req,res,next){    
-    console.log('hola bb POST')
+router.post('/', jsonParser , function(req,res,next){
     let ship = req.body;
-    console.log(ship);
     shipModel.create(ship,function(err, data){
         if (err) {
             next(err);
@@ -53,7 +38,6 @@ router.post('/', jsonParser , function(req,res,next){
 router.put('/:id',jsonParser, async function(req,res,next){
     const filter = { _id: req.params.id };
     const update = req.body;
-    console.log(update, filter)
     await shipModel.findOneAndUpdate(filter, update, {new: true}, function(err,data){
         if (err) {
             next(err);
@@ -66,12 +50,10 @@ router.put('/:id',jsonParser, async function(req,res,next){
 
 router.delete('/:id', function(req,res){
     let shipId = req.params.id;
-    console.log(req.params)
     shipModel.findOneAndRemove({_id:shipId}, function(err, deletedData){
         if (err) {
             next(err);
         }else{
-            console.log(deletedData)
             res.json(deletedData);
         }
     })
