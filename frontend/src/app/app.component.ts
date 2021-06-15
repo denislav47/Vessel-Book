@@ -57,8 +57,15 @@ export class AppComponent {
       this.shipListDisplay.forEach((element: any) => {
 
         // SPLIT IMO STRING INTO NUMBERS ONLY
+        
         if (element.IMO.toLowerCase().includes('imo')) {
-          element.IMO = element.IMO.split("imo",2)[1]
+          if ((element.IMO.toLowerCase().includes('imo '))){
+            element.IMO = element.IMO.split(" ",2)[1]
+          } else {
+            element.IMO = element.IMO.split("imo",2)[1]
+          }
+          
+          
         }        
         
         // IF A SHIP HAS NOT IMAGES, SHOWS A DEFAULT ONE 
@@ -168,7 +175,7 @@ export class AppComponent {
         
             name.value='';
             IMO.value='';
-            type.value='';
+            // type.value='';
             owner.value='';
             contact.value='';
             image.value=''; 
@@ -408,7 +415,6 @@ export class AppComponent {
 
   // CLOSES THE 'ADD NEW' POPUP
   close(){
-    
     let name = document.getElementById('newName') as HTMLInputElement
     let IMO = document.getElementById('newIMO') as HTMLInputElement
     let type = document.getElementById('newType') as HTMLInputElement
@@ -418,7 +424,7 @@ export class AppComponent {
 
     name.value='';
     IMO.value='';
-    type.value='';
+    // type.value='';
     owner.value='';
     contact.value='';
     image.value='';
@@ -434,7 +440,6 @@ export class AppComponent {
 
   // SEARCH SHIPS BY NAME OR IMO
   search(){
-    let aux = this.imagesList
     let searchElement = document.getElementById("inSearch") as HTMLInputElement
     let search = searchElement.value
     this.shipListDisplay=[]
