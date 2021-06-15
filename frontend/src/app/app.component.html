@@ -56,10 +56,10 @@
                                     <tr>
                                         <td>Type: </td>
                                         <td>
-                                            <select  id="inType">
-                                                <option *ngFor="let type of types">{{type.name}}</option>
+                                            <select  id="inType" [(ngModel)]="ship.type">
+                                                <option id="optionType" *ngFor="let type of types" [value]="type.name">{{type.name}}</option>
                                             </select>
-                                        </td>
+                                        </td> 
                                     </tr>
                                     <tr>
                                         <td>Owner: </td>
@@ -118,7 +118,11 @@
                             <td><input id="newName" type="text" placeholder="Name" required></td>
                         </tr>
                         <tr>
-                            <td><input id="newType" type="text" placeholder="Type" required></td>
+                            <td>
+                                <select  id="inNewType" >
+                                    <option id="optionType" *ngFor="let type of types" >{{type.name}}</option>
+                                </select>
+                            </td>
                             <td><input id="newOwner" type="text" placeholder="Owner" required></td>
                         </tr>
                         <tr>

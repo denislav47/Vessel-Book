@@ -12,6 +12,7 @@ export class AppComponent {
 
   // ARRAY WITH ALL THE SHIP DATA TO DISPLAY
   shipListDisplay:any = [];
+  shipList: any = [];
 
   types : any = []
 
@@ -24,6 +25,7 @@ export class AppComponent {
   
   deleteKey:number = -1;
   imageAddKey:number;
+  
   
 
   constructor (public apiService : ApiService) {}
@@ -38,7 +40,6 @@ export class AppComponent {
   getTypes(){
     this.apiService.getTypes().subscribe((res:any) => {
       if(res!=[]){
-        console.log(res)
         this.types = res;
       }
       this.getAll();
@@ -51,6 +52,7 @@ export class AppComponent {
     this.apiService.getShips().subscribe((res: any) => {
       if(res!=[]){
         this.shipListDisplay = res;
+        this.shipList = this.shipListDisplay
       }
       this.shipListDisplay.forEach((element: any) => {
 
@@ -106,7 +108,7 @@ export class AppComponent {
     // INPUT ELEMENTS
     let name = document.getElementById('newName') as HTMLInputElement
     let IMO = document.getElementById('newIMO') as HTMLInputElement
-    let type = document.getElementById('newType') as HTMLInputElement
+    let type = document.getElementById('inNewType') as HTMLInputElement
     let owner = document.getElementById('newOwner') as HTMLInputElement
     let contact = document.getElementById('newContact') as HTMLInputElement
     let image = document.getElementById("newImageUp") as HTMLInputElement
@@ -127,7 +129,6 @@ export class AppComponent {
           this.shipListDisplay.forEach((element: any) => {
             if((IMO.value.indexOf(element.IMO ) > -1) ){
               imoExists = true
-              console.log('true')
               IMO.value='';
               IMO.placeholder = 'IMO already exists'
               IMO.classList.add('validationFail');
@@ -151,6 +152,7 @@ export class AppComponent {
               }   
 
               this.shipListDisplay.push(ship)
+              this.shipList = this.shipListDisplay
               
               this.imagesList.push(images)
               
@@ -218,11 +220,9 @@ export class AppComponent {
         let newIMO = IMO.value
         if (newIMO.toLowerCase().includes('imo')) {
           newIMO = newIMO.split("imo",2)[1]
-        } 
-        console.log('newIMo', newIMO)
+        }
 
         if (newIMO != this.shipListDisplay[key].IMO){
-          console.log('soy diferente al que ay')
           this.shipListDisplay.forEach((element: any) => {
             if((newIMO.indexOf(element.IMO ) > -1) ){
               imoExists = true
@@ -232,7 +232,6 @@ export class AppComponent {
             }
           });
 
-          console.log('imo exists', imoExists)
 
           if (!imoExists){
             let data = {name: name.value, IMO: IMO.value, type: type.value, owner: owner.value, contact: contact.value}
@@ -243,12 +242,11 @@ export class AppComponent {
                 ship.IMO = ship.IMO.split("imo",2)[1]
               } 
               this.shipListDisplay[key] = ship
+              this.shipList = this.shipListDisplay
             })
           }
         } else {
-          console.log('es igual y edito')
           let data = {name: name.value, type: type.value, owner: owner.value, contact: contact.value}
-          console.log(type.value)  
           this.apiService.updateShip(data,this.shipListDisplay[key]._id).subscribe(data =>{
             let ship = data
             if (ship.IMO.toLowerCase().includes('imo')) {
@@ -286,12 +284,13 @@ export class AppComponent {
   // ASSIGN EDIT MODE TO THE SHIP CARD
   edit(key:number){
     Object.assign(this.shipListDisplay[key],{edit: true})
-    let type = document.getElementById('inType') as HTMLInputElement
     // al editar se queda el primer valor del dropdown en vez de el del barco
   }
   
   // REMOVE EDIT MODE FROM THE SHIP CARD
   cancelEdit(key:number){
+    let type = document.getElementById('optionType') as HTMLInputElement
+    let sele = document.getElementById('inType') as HTMLInputElement
     delete this.shipListDisplay[key].edit
   }
 
@@ -322,6 +321,7 @@ export class AppComponent {
     // UPLOADS THE UPDATED ARRAY INTO THE DB
     this.apiService.updateShip({images :imagesArray},this.shipListDisplay[this.imageAddKey]._id).subscribe(data =>{
       this.shipListDisplay[this.imageAddKey] = data
+      this.shipList = this.shipListDisplay
     })
     
     // DISPLAY THE UPDATED IMAGES ARRAY
@@ -354,7 +354,10 @@ export class AppComponent {
     this.shipListDisplay[key].images.splice(this.slideIndex[key],1)
 
     let imagesArray = this.shipListDisplay[key].images
-    this.apiService.updateShip({images :imagesArray},this.shipListDisplay[key]._id)
+    this.apiService.updateShip({images :imagesArray},this.shipListDisplay[key]._id).subscribe(data =>{
+      this.shipListDisplay[this.imageAddKey] = data
+      this.shipList = this.shipListDisplay
+    })
 
     if(this.slideIndex[key]==0){
       this.plusDivs(1,key);
@@ -365,12 +368,14 @@ export class AppComponent {
     // IF THE SHIP HAS NO MORE IMAGES, SHOWS A DEFAULT ONE
     if(isLastImage){
       this.shipListDisplay[key].images = this.imagesPath+'nop.jpg'
-      this.imagesList[key] = this.shipListDisplay[key].images
+      
     }
+    this.imagesList[key] = this.shipListDisplay[key].images
     let btnOK = document.getElementById("saveEdidBtn")
     if (btnOK!= null){
       btnOK.click()
     }
+    this.imageAddKey=-1;
   }
 
   // REMOVES A SHIP AFTER CONFIRMATION
@@ -379,6 +384,7 @@ export class AppComponent {
     
     this.shipListDisplay.splice(this.deleteKey,1);
     this.deleteKey = -1;
+    this.shipList = this.shipListDisplay
     this.closeConf();
   }
 
@@ -428,13 +434,21 @@ export class AppComponent {
 
   // SEARCH SHIPS BY NAME OR IMO
   search(){
+    let aux = this.imagesList
     let searchElement = document.getElementById("inSearch") as HTMLInputElement
     let search = searchElement.value
     this.shipListDisplay=[]
-    this.shipListDisplay.map((element: any) =>{
+    this.imagesList=[]
+    this.shipList.map((element: any) =>{
       if(element.name.toLowerCase().includes(search.toLowerCase())|| element.IMO.toLowerCase().includes(search.toLowerCase())){
+        if (element.images[0] == undefined){
+          this.imagesList.push('../assets/images/nop.jpg')
+        } else {
+          this.imagesList.push(element.images[0])
+        }
+        
         this.shipListDisplay.indexOf(element) === -1 ? this.shipListDisplay.push(element):
-        console.log()
+        console.log('bbb')
       }
       
     })

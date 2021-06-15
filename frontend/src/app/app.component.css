@@ -97,6 +97,7 @@ input[type=text] {
 
 
 #editInfo table {
+    position: absolute;
     font-size: 14px;
     margin-left: 5px;
 }

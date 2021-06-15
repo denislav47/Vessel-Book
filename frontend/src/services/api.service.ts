@@ -41,8 +41,7 @@ export class ApiService {
     }
 
     deleteShip(id: string){
-      return this.http.delete<Ship>(this.url + '/ship/' + id).subscribe(data => {
-    });
+      return this.http.delete<Ship>(this.url + '/ship/' + id);
     }
 
     getTypes(): any {
