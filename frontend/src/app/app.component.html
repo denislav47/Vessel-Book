@@ -6,7 +6,7 @@
         <div id="container" [ngClass]="{'parentDisable': isPopup}">
             <div id="header">
                 <h1>Vessel Book</h1>
-                <input type="search" id="inSearch" (keyup)="search()" placeholder="Search by IMO or name...">
+                <input type="search" id="inSearch" (keyup)="search()" [(ngModel)]="searchIn" placeholder="Search by IMO or name...">
                 <button id="addBtn" class="addShipBtn" (click)="add()"><i class="fa fa-plus">Add new ship</i></button>
                 
             </div>
@@ -31,7 +31,7 @@
                             <img [src]="imagesList[i]"  class="mySlides-{{i}}" alt="image">
                             
                             
-                            <input type='file' id="getFile" style="display:none" (input)='addImage()'>
+                            <input type='file' id="getFile" style="display:none" [(ngModel)]="getFile" (change)='addImage()'>
                             <div id="arrows">
                                 <button *ngIf="ship.images.length > 1" class="w3-button w3-black w3-display-left prev" id="imageBtn" (click)="plusDivs(-1,i)">&#10094;</button>
                                 <button *ngIf="ship.images.length > 1" class="w3-button w3-black w3-display-right next" id="imageBtn" (click)="plusDivs(1,i)">&#10095;</button>
@@ -47,30 +47,29 @@
                                 <table>
                                     <tr>
                                         <td>Name: </td>
-                                        <td><input type="text" id="inName" [value]="ship.name"></td>
+                                        <td><input type="text" id="inName" [value]="ship.name" [(ngModel)]='inName'></td>
                                     </tr>
                                     <tr>
                                         <td>IMO: </td>
-                                        <td><input type="text" id="inIMO" [value]="ship.IMO"></td>
+                                        <td><input [ngClass]="{'validationFail': saveValid}" type="text" id="inIMO" [value]="ship.IMO" [(ngModel)]='inIMO'></td>
                                     </tr>
                                     <tr>
                                         <td>Type: </td>
                                         <td>
                                             <select  id="inType" [(ngModel)]="ship.type">
-                                                <option id="optionType" *ngFor="let type of types" [value]="type.name">{{type.name}}</option>
+                                                <option id="optionType" *ngFor="let type of types" [value]="type.name" >{{type.name}}</option>
                                             </select>
                                         </td> 
                                     </tr>
                                     <tr>
                                         <td>Owner: </td>
-                                        <td><input type="text" id="inOwner" [value]="ship.owner"></td>
+                                        <td><input type="text" id="inOwner" [value]="ship.owner" [(ngModel)]='inOwner'></td>
                                     </tr>
                                     <tr>
                                         <td>Contact: </td>
-                                        <td><input type="text" id="inContact" [value]="ship.contact"></td>
+                                        <td><input  [ngClass]="{'validationFail': saveValid}" type="text" id="inContact" [value]="ship.contact" [(ngModel)]='inContact'></td>
                                     </tr>
                                 </table>
-                                <input id="imageUp" type="file" style="display: none;">
                             </div>
                             
     
@@ -110,25 +109,25 @@
                 
             </div>
             
-            <div id="popup">
+            <div id="popup"  [style.display]="popup">
                 <div id="popupData">
                     <table>
                         <tr>
-                            <td><input id="newIMO" type="text" placeholder="IMO" required></td>
-                            <td><input id="newName" type="text" placeholder="Name" required></td>
+                            <td><input [ngClass]="{'validationFail': saveNewValid}" id="newIMO" type="text" placeholder="IMO" [(ngModel)]='newIMO' required></td>
+                            <td><input id="newName" type="text" placeholder="Name" [(ngModel)]='newName' required></td>
                         </tr>
                         <tr>
                             <td>
-                                <select  id="inNewType" >
+                                <select  id="inNewType" [(ngModel)]='newType' >
                                     <option id="optionType" *ngFor="let type of types" >{{type.name}}</option>
                                 </select>
                             </td>
-                            <td><input id="newOwner" type="text" placeholder="Owner" required></td>
+                            <td><input id="newOwner" type="text" placeholder="Owner" [(ngModel)]='newOwner' required></td>
                         </tr>
                         <tr>
-                            <td><input id="newContact" type="text" placeholder="Contact" required> </td>
+                            <td><input [ngClass]="{'validationFail': saveNewValid}" id="newContact" type="text" placeholder="Contact" [(ngModel)]='newContact' required> </td>
                             <td></td>
-                            <input id="newImageUp" type="file" style="display: none;">
+                            <input id="newImageUp" type="file" style="display: none;" [(ngModel)]='newImageIn'>
                         </tr>
                         <tr>
                             <td><button id="saveImageBtn" (click)="newImage()" class="uploadBtn"><i class="fa fa-file-image-o"> Upload Image</i></button></td>
@@ -141,7 +140,7 @@
                 </div>
             </div>
 
-            <div id="confPopup">
+            <div id="confPopup" [style.display]="confPopup">
                 <div id="confPopupData">
                    
                     <table>

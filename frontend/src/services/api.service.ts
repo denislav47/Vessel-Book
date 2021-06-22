@@ -13,7 +13,7 @@ export class Ship {
     images: any;
   }
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 
 export class ApiService {
 
